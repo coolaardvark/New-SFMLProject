@@ -42,44 +42,9 @@ if (-not (Test-Path -Path $SFMLLibraryPath)) {
     throw "SFML library path $SFMLLibraryPath not found"
 }
 
-# Content template variables
-# I wanted to have these in a seperate file that I 'include'
-# but I can't figure out to do this with PowerShells scope rules
-
-# Dam, this file uses guids in braces and I want to use string format on it, so 
-# I've got to double escape the brances resulting in monstories like this {{{0}}}!
-$solutionFileTemplate = @"
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.9.34728.123
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{{{0}}}") = "{1}", "{1}\{1}.vcxproj", "{{{0}}}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{{{0}}}.Debug|x64.ActiveCfg = Debug|x64
-		{{{0}}}.Debug|x64.Build.0 = Debug|x64
-		{{{0}}}.Debug|x86.ActiveCfg = Debug|Win32
-		{{{0}}}.Debug|x86.Build.0 = Debug|Win32
-		{{{0}}}.Release|x64.ActiveCfg = Release|x64
-		{{{0}}}.Release|x64.Build.0 = Release|x64
-		{{{0}}}.Release|x86.ActiveCfg = Release|Win32
-		{{{0}}}.Release|x86.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {{{2}}}
-	EndGlobalSection
-EndGlobal
-"@
+# Content template variables, loaded from external file to keep the
+# code here, nice a clean
+.\VS2022Templates.ps1
 
 function New-Folder {
     param($path, $name)
@@ -120,13 +85,21 @@ function New-SolutionAndProject {
     param($basePath, $projectName)
 
     $solutionFile = Join-Path $basePath "${projectName}\${projectName}.sln"
+    $projectFile = Join-Path $basePath "${projectName}\${projectName}\${projectName}.vcxproj"
+    $sourceFile = Join-Path $basePath "${projectName}\${projectName}\main.cpp"
 
     $projectGUID = New-Guid
     $solutionGUID = New-Guid
 
     $solutionFileContents = [string]::Format($solutionFileTemplate, $projectGUID, $projectName, $solutionGUID)
-
     $solutionFileContents | Out-File -FilePath $solutionFile
+
+    $projectFileContents = [string]::Format($projectFileTemplate, $projectGUID, $basePath, $projectName)
+    $projectFileContents | Out-File -FilePath $projectFile
+
+    # Create a source file so the project actually has something to build
+    $sourceFileContents = [string]::Format($sourceFileTemplate, $projectName)
+    $sourceFileContents | Out-File -FilePath $sourceFile
 }
 
 New-ProjectDirStructure -basePath $ProjectPath -projectName $ProjectName
