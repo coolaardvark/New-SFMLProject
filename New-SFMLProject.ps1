@@ -37,6 +37,17 @@ if ($SFMLLibraryPath -eq '') {
     $SFMLLibraryPath = 'D:\SFML\SFML-2.6.1'
 }
 
+$gitExe = ''
+if (Test-Path "${ENV:ProgramFiles}\Git\bin\git.exe") {
+    $gitExe = "${ENV:ProgramFiles}\Git\bin\git.exe"
+}
+elseif (Test-Path "${ENV:LocalAppData}\Programs\Git\bin\git.exe") {
+    $gitExe = "${ENV:LocalAppData}\Programs\Git\bin\git.exe"
+}
+else {
+    $gitExe = 'not found'
+}
+
 # Pre-start checks
 if (-not (Test-Path -Path $SFMLLibraryPath)) {
     throw "SFML library path $SFMLLibraryPath not found"
@@ -102,5 +113,18 @@ function New-SolutionAndProject {
     $sourceFileContents | Out-File -FilePath $sourceFile
 }
 
+function New-Repository {
+    param($basePath, $projectName)
+}
+
+if ($NoRepository -eq $false -and $gitExe -eq 'not found') {
+    Write-Host "I can't find git.exe, if you still want to set up the solution pass the NoRepository switch to disable this or install git"
+    return 1
+}
+
 New-ProjectDirStructure -basePath $ProjectPath -projectName $ProjectName
 New-SolutionAndProject -basePath $ProjectPath -projectName $ProjectName
+
+if ($NoRepository -eq $false) {
+    New-Repository -basePath $ProjectPath -projectName $ProjectName
+}
