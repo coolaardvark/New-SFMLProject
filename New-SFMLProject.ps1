@@ -37,15 +37,13 @@ if ($SFMLLibraryPath -eq '') {
     $SFMLLibraryPath = 'D:\SFML\SFML-2.6.1'
 }
 
-$gitExe = ''
-if (Test-Path "${ENV:ProgramFiles}\Git\bin\git.exe") {
-    $gitExe = "${ENV:ProgramFiles}\Git\bin\git.exe"
-}
-elseif (Test-Path "${ENV:LocalAppData}\Programs\Git\bin\git.exe") {
-    $gitExe = "${ENV:LocalAppData}\Programs\Git\bin\git.exe"
-}
-else {
-    $gitExe = 'not found'
+$gitExe = Join-Path $ENV:ProgramFiles "Git\bin\git.exe"
+if (-not (Test-Path $gitExe)) {
+    $gitExe = Join-Path $ENV:LOCALAPPDATA "Programs\Git\bin\git.exe"
+
+    if (-not (Test-Path $gitExe)) {
+        $gitExe = 'not found'
+    }
 }
 
 # Pre-start checks
@@ -95,26 +93,39 @@ function New-ProjectDirStructure {
 function New-SolutionAndProject {
     param($basePath, $projectName)
 
-    $solutionFile = Join-Path $basePath "${projectName}\${projectName}.sln"
-    $projectFile = Join-Path $basePath "${projectName}\${projectName}\${projectName}.vcxproj"
-    $sourceFile = Join-Path $basePath "${projectName}\${projectName}\main.cpp"
+    $projectPath = Join-Path $basePath $projectName
 
     $projectGUID = New-Guid
     $solutionGUID = New-Guid
 
-    $solutionFileContents = [string]::Format($solutionFileTemplate, $projectGUID, $projectName, $solutionGUID)
-    $solutionFileContents | Out-File -FilePath $solutionFile
+    $solutionFileContents = [string]::Format($global:solutionFileTemplate, $projectGUID, $projectName, $solutionGUID)
+    $solutionFileContents | Out-File -FilePath (Join-Path $projectPath "${projectName}.sln")
 
-    $projectFileContents = [string]::Format($projectFileTemplate, $projectGUID, $basePath, $projectName)
-    $projectFileContents | Out-File -FilePath $projectFile
+    # Yes this is right, the project name appears twice in the path
+    $sourcePath = Join-Path $projectPath $projectName
+    $projectFileContents = [string]::Format($global:projectFileTemplate, $projectGUID, $basePath, $projectName)
+    $projectFileContents | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj")
+
+    $global:vcxprojFiltersTemplate | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj.filters")
+    $global:vcxprojUserTemplate | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj.user")
 
     # Create a source file so the project actually has something to build
     $sourceFileContents = [string]::Format($sourceFileTemplate, $projectName)
-    $sourceFileContents | Out-File -FilePath $sourceFile
+    $sourceFileContents | Out-File -FilePath (Join-Path $sourcePath 'main.cpp')
 }
 
 function New-Repository {
     param($basePath, $projectName)
+
+    $solutionPath = Join-Path $basePath $projectName
+    Set-Location $solutionPath
+
+    $gitIgnorePath = Join-Path $solutionPath '.gitignore'
+    $gitIgnoreTemplate | Out-File -FilePath $gitIgnorePath
+
+    & $gitExe init
+    & $gitExe add .
+    & $gitExe commit -a -m 'SFML template appiled'
 }
 
 if ($NoRepository -eq $false -and $gitExe -eq 'not found') {
@@ -125,6 +136,6 @@ if ($NoRepository -eq $false -and $gitExe -eq 'not found') {
 New-ProjectDirStructure -basePath $ProjectPath -projectName $ProjectName
 New-SolutionAndProject -basePath $ProjectPath -projectName $ProjectName
 
-if ($NoRepository -eq $false) {
+if (-not $NoRepository) {
     New-Repository -basePath $ProjectPath -projectName $ProjectName
 }
