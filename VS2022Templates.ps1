@@ -123,24 +123,32 @@ $global:projectFileTemplate = @'
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>{1}{2}\sfml\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>{1}{2}\sfml\x86\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>{1}{2}\sfml\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>{1}{2}\sfml\x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-window-d.lib</AdditionalDependencies>
     </Link>
     <PreLinkEvent>
-      <Command>copy $(SolutionDir)sfml\bin\sfml-audio-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\bin\sfml-graphics-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\bin\sfml-network-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\bin\sfml-system-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\bin\sfml-window-d-2.dll $(OutDir)</Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
     <PreLinkEvent>
-      <Message>Copies needed sfml dll's to output</Message>
+      <Message>
+      </Message>
     </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copies required dlls to output directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -150,16 +158,26 @@ copy $(SolutionDir)sfml\bin\sfml-window-d-2.dll $(OutDir)</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>{1}{2}\sfml\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>{1}{2}\sfml\x86\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\source\nonrepos\SFMLFirst\sfml\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>{1}{2}sfml\x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;sfml-window.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copies required dlls to output directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -167,24 +185,32 @@ copy $(SolutionDir)sfml\bin\sfml-window-d-2.dll $(OutDir)</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>{1}{2}\sfml\include;{1}{2}\sfml\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>{1}{2}\sfml\x64\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>{1}{2}\sfml\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>{1}{2}\sfml\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-window-d.lib</AdditionalDependencies>
     </Link>
     <PreLinkEvent>
-      <Command>copy $(SolutionDir)sfml\bin\sfml-audio-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\bin\sfml-graphics-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\bin\sfml-network-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\bin\sfml-system-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\bin\sfml-window-d-2.dll $(OutDir)</Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
     <PreLinkEvent>
-      <Message>Copies needed sfml dll's to output</Message>
+      <Message>
+      </Message>
     </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copies required dlls to output directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -194,16 +220,26 @@ copy $(SolutionDir)sfml\bin\sfml-window-d-2.dll $(OutDir)</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>{1}{2}\sfml\include;{1}{2}\sfml\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>{1}{2}\sfml\x64\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>{1}{2}\sfml\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>{1}{2}\sfml\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;sfml-window.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copies required dlls to output directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

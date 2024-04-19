@@ -63,6 +63,17 @@ function New-Folder {
     }
 }
 
+function Copy-Libraries {
+    param($arcitecture, $solutionSFMLPath)
+
+    $arcLibPath = Join-Path $SFMLLibraryPath $arcitecture
+    $solutionLibPath = Join-Path $solutionSFMLPath $arcitecture
+
+    Copy-Item -Path (Join-Path $arcLibPath "lib") -Destination $solutionLibPath -Recurse
+    Copy-Item -Path (Join-Path $arcLibPath "bin") -Destination $solutionLibPath -Recurse
+    Copy-Item -Path (Join-Path $arcLibPath "include") -Destination $solutionLibPath -Recurse
+}
+
 function New-ProjectDirStructure {
     param($basePath, $projectName)
 
@@ -84,10 +95,9 @@ function New-ProjectDirStructure {
     # Next the all important lib, bin and include directories
     $sfmlPath = Join-Path $solutionPath "sfml"
     New-Folder -path $solutionPath -name "sfml"
-    # copy the sub dirs and contents from our master copy
-    Copy-Item -Path (Join-Path $SFMLLibraryPath "lib") -Destination $sfmlPath -Recurse
-    Copy-Item -Path (Join-Path $SFMLLibraryPath "bin") -Destination $sfmlPath -Recurse
-    Copy-Item -Path (Join-Path $SFMLLibraryPath "include") -Destination $sfmlPath -Recurse
+    # copy the sub dirs and contents from our master copy for both architectures
+    Copy-Libraries -arcitecture 'x86' -solutionSFMLPath $sfmlPath
+    Copy-Libraries -arcitecture 'x64' -solutionSFMLPath $sfmlPath
 }
 
 function New-SolutionAndProject {
@@ -118,7 +128,7 @@ function New-Repository {
     param($basePath, $projectName)
 
     $solutionPath = Join-Path $basePath $projectName
-    Set-Location $solutionPath
+    Push-Location $solutionPath
 
     $gitIgnorePath = Join-Path $solutionPath '.gitignore'
     $gitIgnoreTemplate | Out-File -FilePath $gitIgnorePath
@@ -126,6 +136,8 @@ function New-Repository {
     & $gitExe init
     & $gitExe add .
     & $gitExe commit -a -m 'SFML template appiled'
+
+    Pop-Location
 }
 
 if ($NoRepository -eq $false -and $gitExe -eq 'not found') {
