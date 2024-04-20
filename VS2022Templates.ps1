@@ -165,7 +165,7 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Com
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>{1}{2}sfml\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>{1}{2}\sfml\x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;sfml-window.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>

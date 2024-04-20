@@ -10,10 +10,15 @@
     Optional string, an override to the default path for directory holding the
     lib, bin and lnclude directories with the files that are copied in to
     the project. Could be used to build against different versions of the
-    library
+    library. The directory should have both 32 and 64 bit versions of the library
+    in the x86 and x64 sub-directories respectively
     .PARAMETER NoRepository
     Switch, if passed the script will not create a local git repository for
     the project
+    .PARAMETER StaticLib
+    Switch, if passed the exe is built using static, complied in, libraries
+    to reduce the number of files you need to run it, at the expense of the
+    size of the files
 #>
 
 param(
@@ -24,7 +29,9 @@ param(
     [Parameter(Mandatory=$false)]
     [string]$SFMLLibraryPath = '',
     [Parameter]
-    [switch]$NoRepository
+    [switch]$NoRepository,
+    [Parameter]
+    [switch]$StaticLib
 )
 
 Set-StrictMode -Version Latest
@@ -151,3 +158,5 @@ New-SolutionAndProject -basePath $ProjectPath -projectName $ProjectName
 if (-not $NoRepository) {
     New-Repository -basePath $ProjectPath -projectName $ProjectName
 }
+
+Invoke-Item (Join-Path $ProjectPath $ProjectName "${ProjectName}.sln")
