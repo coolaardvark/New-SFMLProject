@@ -69,7 +69,7 @@ $global:projectFileTemplate = @'
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{{{0}}}</ProjectGuid>
-    <RootNamespace>SFMLFirst</RootNamespace>
+    <RootNamespace>{2}</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

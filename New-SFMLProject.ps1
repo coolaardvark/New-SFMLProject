@@ -58,9 +58,11 @@ if (-not (Test-Path -Path $SFMLLibraryPath)) {
     throw "SFML library path $SFMLLibraryPath not found"
 }
 
+# We might not be run from the directory with our templates in
+$scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 # Content template variables, loaded from external file to keep the
 # code here, nice a clean
-.\VS2022Templates.ps1
+.(Join-Path $scriptPath 'VS2022Templates.ps1')
 
 function New-Folder {
     param($path, $name)
