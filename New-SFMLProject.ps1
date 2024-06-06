@@ -122,7 +122,16 @@ function New-SolutionAndProject {
 
     # Yes this is right, the project name appears twice in the path
     $sourcePath = Join-Path $projectPath $projectName
-    $projectFileContents = [string]::Format($global:projectFileTemplate, $projectGUID, $basePath, $projectName)
+
+    $selectedProjectFileTemplate = ''
+    if ($StaticLib) {
+        $selectedProjectFileTemplate = $global:staticLibProjectFileTemplate
+    }
+    else {
+        $selectedProjectFileTemplate = $global:projectFileTemplate
+    }
+
+    $projectFileContents = [string]::Format($selectedProjectFileTemplate, $projectGUID, $basePath, $projectName)
     $projectFileContents | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj")
 
     $global:vcxprojFiltersTemplate | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj.filters")
