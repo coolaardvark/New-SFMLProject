@@ -169,11 +169,11 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Com
       <AdditionalDependencies>sfml-system.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;sfml-window.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Command>
+      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-2.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies required dlls to output directory</Message>
@@ -232,10 +232,10 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Com
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Command>
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-2.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-2.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies required dlls to output directory</Message>
