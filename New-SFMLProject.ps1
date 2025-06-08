@@ -28,9 +28,9 @@ param(
     [string]$ProjectPath = '',
     [Parameter(Mandatory=$false)]
     [string]$SFMLLibraryPath = '',
-    [Parameter]
+    [Parameter(Mandatory=$false)]
     [switch]$NoRepository,
-    [Parameter]
+    [Parameter(Mandatory=$false)]
     [switch]$StaticLib
 )
 
@@ -41,7 +41,7 @@ if ($ProjectPath -eq '') {
     $ProjectPath = 'D:\source\repos\'
 }
 if ($SFMLLibraryPath -eq '') {
-    $SFMLLibraryPath = 'D:\SFML\SFML-2.6.1'
+    $SFMLLibraryPath = 'D:\source\SFML\SFML-2.6.1'
 }
 
 $gitExe = Join-Path $ENV:ProgramFiles "Git\bin\git.exe"
