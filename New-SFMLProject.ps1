@@ -52,15 +52,18 @@ if ($ProjectPath -eq '') {
 if ($SFMLLibraryPath -eq '') {
     $SFMLLibraryPath = 'D:\source\SFML\'
 }
+
 if ($Version -eq '') {
-    $LibDirectory = (Get-ChildItem("$SFMLLibraryPath\SMFL-*")).FullName | Sort-Object | Select-Object -Last 1
+    $LibDirectory = (Get-ChildItem("$($SFMLLibraryPath)SFML-*") | Sort-Object | Select-Object -Last 1).FullName
+    # Extract version number
+    $Version = $LibDirectory.Substring($LibDirectory.Length -5)
 }
 else {
     if ($Version -match '\d+\.\d+\.\d+') {
-        $LibDirectory = "$SFMLLibraryPath\SMFL-$Version"
+        $LibDirectory = "$($SFMLLibraryPath)SFML-$Version"
     }
     elseif ($Version -match '\d+') {
-        $LibDirectory = (Get-ChildItem("$SFMLLibraryPath\SMFL-$Version*")).FullName | Sort-Object | Select-Object -Last 1
+        $LibDirectory = (Get-ChildItem("$($SFMLLibraryPath)SFML-$Version.0.0") | Sort-Object | Select-Object -Last 1).FullName
     }
 }
 
@@ -70,7 +73,7 @@ else {
 if ($null -eq $LibDirectory) {
     throw "No SMFL-<version> directory found in $SFMLLibraryPath"
 }
-if (Test-Path -eq $LibDirectory) {
+if (-not (Test-Path -Path $LibDirectory)) {
     throw  "No SMFL-$Version directory found in $SFMLLibraryPath"
 }
 
@@ -81,11 +84,6 @@ if (-not (Test-Path $gitExe)) {
     if (-not (Test-Path $gitExe)) {
         $gitExe = 'not found'
     }
-}
-
-# Pre-start checks
-if (-not (Test-Path -Path $SFMLLibraryPath)) {
-    throw "SFML library path $SFMLLibraryPath not found"
 }
 
 # We might not be run from the directory with our templates in
@@ -105,7 +103,7 @@ function New-Folder {
 function Copy-Libraries {
     param($arcitecture, $solutionSFMLPath)
 
-    $arcLibPath = Join-Path $SFMLLibraryPath $arcitecture
+    $arcLibPath = Join-Path $LibDirectory $arcitecture
     $solutionLibPath = Join-Path $solutionSFMLPath $arcitecture
 
     Copy-Item -Path (Join-Path $arcLibPath "lib") -Destination $solutionLibPath -Recurse
@@ -140,12 +138,27 @@ function New-ProjectDirStructure {
 }
 
 function New-SolutionAndProject {
-    param($basePath, $projectName)
+    param($basePath, $projectName, $version)
 
     $projectPath = Join-Path $basePath $projectName
 
     $projectGUID = New-Guid
     $solutionGUID = New-Guid
+
+    # Version spesifc stuff
+    $sampleFileTemplate = ''
+    $cppLanguageVersion = ''
+    switch ($version) {
+        '2' { 
+            $sampleFileTemplate = $sourceFileTemplateV2
+            $cppLanguageVersion = '14' 
+        }
+        '3' { 
+            $sampleFileTemplate = $sourceFileTemplateV3
+            $cppLanguageVersion = '17'
+        }
+        Default { throw "Unsuported version! $version" }
+    }
 
     $solutionFileContents = [string]::Format($global:solutionFileTemplate, $projectGUID, $projectName, $solutionGUID)
     $solutionFileContents | Out-File -FilePath (Join-Path $projectPath "${projectName}.sln")
@@ -161,14 +174,15 @@ function New-SolutionAndProject {
         $selectedProjectFileTemplate = $global:projectFileTemplate
     }
 
-    $projectFileContents = [string]::Format($selectedProjectFileTemplate, $projectGUID, $basePath, $projectName)
+
+    $projectFileContents = [string]::Format($selectedProjectFileTemplate, $projectGUID, $basePath, $projectName, $cppLanguageVersion)
     $projectFileContents | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj")
 
     $global:vcxprojFiltersTemplate | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj.filters")
     $global:vcxprojUserTemplate | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj.user")
 
     # Create a source file so the project actually has something to build
-    $sourceFileContents = [string]::Format($sourceFileTemplate, $projectName)
+    $sourceFileContents = [string]::Format($sampleFileTemplate, $projectName)
     $sourceFileContents | Out-File -FilePath (Join-Path $sourcePath 'main.cpp')
 }
 
@@ -194,7 +208,8 @@ if ($NoRepository -eq $false -and $gitExe -eq 'not found') {
 }
 
 New-ProjectDirStructure -basePath $ProjectPath -projectName $ProjectName
-New-SolutionAndProject -basePath $ProjectPath -projectName $ProjectName
+# We only care about the first digit of our version here
+New-SolutionAndProject -basePath $ProjectPath -projectName $ProjectName -version $Version.Substring(0, 1)
 
 if (-not $NoRepository) {
     New-Repository -basePath $ProjectPath -projectName $ProjectName
