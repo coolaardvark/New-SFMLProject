@@ -9,9 +9,15 @@
     .PARAMETER SFMLLibraryPath
     Optional string, an override to the default path for directory holding the
     lib, bin and lnclude directories with the files that are copied in to
-    the project. Could be used to build against different versions of the
-    library. The directory should have both 32 and 64 bit versions of the library
-    in the x86 and x64 sub-directories respectively
+    the project. The directory should have both 32 and 64 bit versions of 
+    the library in the x86 and x64 sub-directories respectively
+    .PARAMETER Version
+    The version of SFML that you want to build for, e.g 2.6.1 or 3.0.0. A
+    directory with the matching version number must exist in the SFMMLibraryPath
+    so if building for 3, then the SMFL-3.0.0 must exist. You just sepcify a major
+    3 version in which case the script will select the latest minor version that it
+    finds in the library path. Optional, if not provided the latest version found
+    will be used
     .PARAMETER NoRepository
     Switch, if passed the script will not create a local git repository for
     the project
@@ -29,6 +35,8 @@ param(
     [Parameter(Mandatory=$false)]
     [string]$SFMLLibraryPath = '',
     [Parameter(Mandatory=$false)]
+    [string]$Version = '',
+    [Parameter(Mandatory=$false)]
     [switch]$NoRepository,
     [Parameter(Mandatory=$false)]
     [switch]$StaticLib
@@ -36,12 +44,34 @@ param(
 
 Set-StrictMode -Version Latest
 
+$LibDirectory = ''
 # Set defaults
 if ($ProjectPath -eq '') {
     $ProjectPath = 'D:\source\repos\'
 }
 if ($SFMLLibraryPath -eq '') {
-    $SFMLLibraryPath = 'D:\source\SFML\SFML-2.6.1'
+    $SFMLLibraryPath = 'D:\source\SFML\'
+}
+if ($Version -eq '') {
+    $LibDirectory = (Get-ChildItem("$SFMLLibraryPath\SMFL-*")).FullName | Sort-Object | Select-Object -Last 1
+}
+else {
+    if ($Version -match '\d+\.\d+\.\d+') {
+        $LibDirectory = "$SFMLLibraryPath\SMFL-$Version"
+    }
+    elseif ($Version -match '\d+') {
+        $LibDirectory = (Get-ChildItem("$SFMLLibraryPath\SMFL-$Version*")).FullName | Sort-Object | Select-Object -Last 1
+    }
+}
+
+# I have to do these two checks seperatley, if I used an -or both clauses
+# would need to be evaulated meaning if $LibDirectory was null, we would
+# get a null error while running Test-Path
+if ($null -eq $LibDirectory) {
+    throw "No SMFL-<version> directory found in $SFMLLibraryPath"
+}
+if (Test-Path -eq $LibDirectory) {
+    throw  "No SMFL-$Version directory found in $SFMLLibraryPath"
 }
 
 $gitExe = Join-Path $ENV:ProgramFiles "Git\bin\git.exe"
@@ -159,7 +189,7 @@ function New-Repository {
 }
 
 if ($NoRepository -eq $false -and $gitExe -eq 'not found') {
-    Write-Host "I can't find git.exe, if you still want to set up the solution pass the NoRepository switch to disable this or install git"
+    Write-Host 'I can''t find git.exe, if you still want to set up the solution pass the NoRepository switch to disable this or install git'
     return 1
 }
 
