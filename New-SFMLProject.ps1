@@ -9,9 +9,15 @@
     .PARAMETER SFMLLibraryPath
     Optional string, an override to the default path for directory holding the
     lib, bin and lnclude directories with the files that are copied in to
-    the project. Could be used to build against different versions of the
-    library. The directory should have both 32 and 64 bit versions of the library
-    in the x86 and x64 sub-directories respectively
+    the project. The directory should have both 32 and 64 bit versions of 
+    the library in the x86 and x64 sub-directories respectively
+    .PARAMETER Version
+    The version of SFML that you want to build for, e.g 2.6.1 or 3.0.0. A
+    directory with the matching version number must exist in the SFMMLibraryPath
+    so if building for 3, then the SMFL-3.0.0 must exist. You just sepcify a major
+    3 version in which case the script will select the latest minor version that it
+    finds in the library path. Optional, if not provided the latest version found
+    will be used
     .PARAMETER NoRepository
     Switch, if passed the script will not create a local git repository for
     the project
@@ -29,6 +35,8 @@ param(
     [Parameter(Mandatory=$false)]
     [string]$SFMLLibraryPath = '',
     [Parameter(Mandatory=$false)]
+    [string]$Version = '',
+    [Parameter(Mandatory=$false)]
     [switch]$NoRepository,
     [Parameter(Mandatory=$false)]
     [switch]$StaticLib
@@ -36,12 +44,37 @@ param(
 
 Set-StrictMode -Version Latest
 
+$LibDirectory = ''
 # Set defaults
 if ($ProjectPath -eq '') {
     $ProjectPath = 'D:\source\repos\'
 }
 if ($SFMLLibraryPath -eq '') {
-    $SFMLLibraryPath = 'D:\source\SFML\SFML-2.6.1'
+    $SFMLLibraryPath = 'D:\source\SFML\'
+}
+
+if ($Version -eq '') {
+    $LibDirectory = (Get-ChildItem("$($SFMLLibraryPath)SFML-*") | Sort-Object | Select-Object -Last 1).FullName
+    # Extract version number
+    $Version = $LibDirectory.Substring($LibDirectory.Length -5)
+}
+else {
+    if ($Version -match '\d+\.\d+\.\d+') {
+        $LibDirectory = "$($SFMLLibraryPath)SFML-$Version"
+    }
+    elseif ($Version -match '\d+') {
+        $LibDirectory = (Get-ChildItem("$($SFMLLibraryPath)SFML-$Version.*") | Sort-Object | Select-Object -Last 1).FullName
+    }
+}
+
+# I have to do these two checks seperatley, if I used an -or both clauses
+# would need to be evaulated meaning if $LibDirectory was null, we would
+# get a null error while running Test-Path
+if ($null -eq $LibDirectory) {
+    throw "No SMFL-<version> directory found in $SFMLLibraryPath"
+}
+if (-not (Test-Path -Path $LibDirectory)) {
+    throw  "No SMFL-$Version directory found in $SFMLLibraryPath"
 }
 
 $gitExe = Join-Path $ENV:ProgramFiles "Git\bin\git.exe"
@@ -51,11 +84,6 @@ if (-not (Test-Path $gitExe)) {
     if (-not (Test-Path $gitExe)) {
         $gitExe = 'not found'
     }
-}
-
-# Pre-start checks
-if (-not (Test-Path -Path $SFMLLibraryPath)) {
-    throw "SFML library path $SFMLLibraryPath not found"
 }
 
 # We might not be run from the directory with our templates in
@@ -75,7 +103,7 @@ function New-Folder {
 function Copy-Libraries {
     param($arcitecture, $solutionSFMLPath)
 
-    $arcLibPath = Join-Path $SFMLLibraryPath $arcitecture
+    $arcLibPath = Join-Path $LibDirectory $arcitecture
     $solutionLibPath = Join-Path $solutionSFMLPath $arcitecture
 
     Copy-Item -Path (Join-Path $arcLibPath "lib") -Destination $solutionLibPath -Recurse
@@ -110,12 +138,27 @@ function New-ProjectDirStructure {
 }
 
 function New-SolutionAndProject {
-    param($basePath, $projectName)
+    param($basePath, $projectName, $version)
 
     $projectPath = Join-Path $basePath $projectName
 
     $projectGUID = New-Guid
     $solutionGUID = New-Guid
+
+    # Version spesifc stuff
+    $sampleFileTemplate = ''
+    $cppLanguageVersion = ''
+    switch ($version) {
+        '2' { 
+            $sampleFileTemplate = $sourceFileTemplateV2
+            $cppLanguageVersion = '14' 
+        }
+        '3' { 
+            $sampleFileTemplate = $sourceFileTemplateV3
+            $cppLanguageVersion = '17'
+        }
+        Default { throw "Unsuported version! $version" }
+    }
 
     $solutionFileContents = [string]::Format($global:solutionFileTemplate, $projectGUID, $projectName, $solutionGUID)
     $solutionFileContents | Out-File -FilePath (Join-Path $projectPath "${projectName}.sln")
@@ -131,14 +174,15 @@ function New-SolutionAndProject {
         $selectedProjectFileTemplate = $global:projectFileTemplate
     }
 
-    $projectFileContents = [string]::Format($selectedProjectFileTemplate, $projectGUID, $basePath, $projectName)
+
+    $projectFileContents = [string]::Format($selectedProjectFileTemplate, $projectGUID, $basePath, $projectName, $cppLanguageVersion, $version)
     $projectFileContents | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj")
 
     $global:vcxprojFiltersTemplate | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj.filters")
     $global:vcxprojUserTemplate | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj.user")
 
     # Create a source file so the project actually has something to build
-    $sourceFileContents = [string]::Format($sourceFileTemplate, $projectName)
+    $sourceFileContents = [string]::Format($sampleFileTemplate, $projectName)
     $sourceFileContents | Out-File -FilePath (Join-Path $sourcePath 'main.cpp')
 }
 
@@ -159,12 +203,13 @@ function New-Repository {
 }
 
 if ($NoRepository -eq $false -and $gitExe -eq 'not found') {
-    Write-Host "I can't find git.exe, if you still want to set up the solution pass the NoRepository switch to disable this or install git"
+    Write-Host 'I can''t find git.exe, if you still want to set up the solution pass the NoRepository switch to disable this or install git'
     return 1
 }
 
 New-ProjectDirStructure -basePath $ProjectPath -projectName $ProjectName
-New-SolutionAndProject -basePath $ProjectPath -projectName $ProjectName
+# We only care about the first digit of our version here
+New-SolutionAndProject -basePath $ProjectPath -projectName $ProjectName -version $Version.Substring(0, 1)
 
 if (-not $NoRepository) {
     New-Repository -basePath $ProjectPath -projectName $ProjectName

@@ -44,6 +44,8 @@ EndGlobal
 # 0 = project GUID
 # 1 = project base directory
 # 2 = project name
+# 3 = C++ langauge versions
+# 4 = dll version sufix
 $global:projectFileTemplate = @'
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -124,6 +126,7 @@ $global:projectFileTemplate = @'
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>{1}\{2}\sfml\x86\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp{3}</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,11 +143,11 @@ $global:projectFileTemplate = @'
       </Message>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Command>
+      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-{4}.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies required dlls to output directory</Message>
@@ -159,6 +162,7 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Com
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>{1}\{2}\sfml\x86\include</AdditionalIncludeDirectories>
+       <LanguageStandard>stdcpp{3}</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -169,11 +173,11 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Com
       <AdditionalDependencies>sfml-system.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;sfml-window.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-2.dll $(OutDir)</Command>
+      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-{4}.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies required dlls to output directory</Message>
@@ -186,6 +190,7 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-2.dll $(OutDir)</Comma
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>{1}\{2}\sfml\x64\include</AdditionalIncludeDirectories>
+       <LanguageStandard>stdcpp{3}</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -202,11 +207,11 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-2.dll $(OutDir)</Comma
       </Message>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Command>
+      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-{4}.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies required dlls to output directory</Message>
@@ -221,6 +226,7 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Com
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>{1}\{2}\sfml\x64\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp{3}</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -232,10 +238,10 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Com
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-2.dll $(OutDir)</Command>
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-{4}.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies required dlls to output directory</Message>
@@ -405,32 +411,58 @@ $global:staticLibProjectFileTemplate = @'
 # Again, the choice of braces casues a problem here, C code it going to be
 # littered with the dam things, each one needs escaping! Thankfully not to
 # many in this simple example
-$global:sourceFileTemplate = @'
+$global:sourceFileTemplateV2 = @'
 #include <SFML/Graphics.hpp>
 
 int main()
 {{
-    sf::RenderWindow window(sf::VideoMode(200, 200), "{0} works");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+  sf::RenderWindow window(sf::VideoMode(200, 200), "{0} works");
+  sf::CircleShape shape(100.f);
+  shape.setFillColor(sf::Color::Green);
 
-    while (window.isOpen())
+  while (window.isOpen())
+  {{
+    sf::Event event;
+    while (window.pollEvent(event))
     {{
-        sf::Event event;
-        while (window.pollEvent(event))
+        if (event.type == sf::Event::Closed)
         {{
-            if (event.type == sf::Event::Closed)
-            {{
-                window.close();
-            }}
+            window.close();
         }}
-
-        window.clear();
-        window.draw(shape);
-        window.display();
     }}
 
-    return 0;
+    window.clear();
+    window.draw(shape);
+    window.display();
+  }}
+
+  return 0;
+}}
+'@
+
+$global:sourceFileTemplateV3 = @'
+#include <SFML/Graphics.hpp>
+
+int main()
+{{
+  sf::RenderWindow window(sf::VideoMode({{200, 200}}), "{0} works!");
+  sf::CircleShape shape(100.f);
+  shape.setFillColor(sf::Color::Green);
+
+  while (window.isOpen())
+  {{
+    while (const std::optional event = window.pollEvent())
+    {{
+        if (event->is<sf::Event::Closed>())
+        {{
+            window.close();
+        }}
+    }}
+
+    window.clear();
+    window.draw(shape);
+    window.display();
+  }}
 }}
 '@
 
