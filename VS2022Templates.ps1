@@ -45,6 +45,7 @@ EndGlobal
 # 1 = project base directory
 # 2 = project name
 # 3 = C++ langauge versions
+# 4 = dll version sufix
 $global:projectFileTemplate = @'
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -142,11 +143,11 @@ $global:projectFileTemplate = @'
       </Message>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Command>
+      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-{4}.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies required dlls to output directory</Message>
@@ -172,11 +173,11 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Com
       <AdditionalDependencies>sfml-system.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;sfml-window.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-2.dll $(OutDir)</Command>
+      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-{4}.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies required dlls to output directory</Message>
@@ -206,11 +207,11 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-2.dll $(OutDir)</Comma
       </Message>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Command>
+      <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-d-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-{4}.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies required dlls to output directory</Message>
@@ -237,10 +238,10 @@ copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-d-2.dll $(OutDir)</Com
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-audio-d-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-2.dll $(OutDir)
-copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-2.dll $(OutDir)</Command>
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-graphics-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-network-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-system-{4}.dll $(OutDir)
+copy $(SolutionDir)sfml\$(PlatformTarget)\bin\sfml-window-{4}.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies required dlls to output directory</Message>

@@ -63,7 +63,7 @@ else {
         $LibDirectory = "$($SFMLLibraryPath)SFML-$Version"
     }
     elseif ($Version -match '\d+') {
-        $LibDirectory = (Get-ChildItem("$($SFMLLibraryPath)SFML-$Version.0.0") | Sort-Object | Select-Object -Last 1).FullName
+        $LibDirectory = (Get-ChildItem("$($SFMLLibraryPath)SFML-$Version.*") | Sort-Object | Select-Object -Last 1).FullName
     }
 }
 
@@ -175,7 +175,7 @@ function New-SolutionAndProject {
     }
 
 
-    $projectFileContents = [string]::Format($selectedProjectFileTemplate, $projectGUID, $basePath, $projectName, $cppLanguageVersion)
+    $projectFileContents = [string]::Format($selectedProjectFileTemplate, $projectGUID, $basePath, $projectName, $cppLanguageVersion, $version)
     $projectFileContents | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj")
 
     $global:vcxprojFiltersTemplate | Out-File -FilePath (Join-Path $sourcePath "${projectName}.vcxproj.filters")
