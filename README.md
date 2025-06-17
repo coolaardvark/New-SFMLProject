@@ -5,3 +5,7 @@
  creates the required Visual Studio directory stucture and sets up the solution and project 
  files (.sln and .vcxproj respectivley) so the project should build with no futher 
  configuration tweaking.
+
+I've built this as part of me learning SFML and C++ programing in general, so while it 
+works, it might not create a project that produces the most optimised code, but as I 
+learn things should improve!
