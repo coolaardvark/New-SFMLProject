@@ -157,6 +157,7 @@ function New-SolutionAndProject {
             $sampleFileTemplate = $sourceFileTemplateV3
             $cppLanguageVersion = '17'
         }
+        
         Default { throw "Unsuported version! $version" }
     }
 
